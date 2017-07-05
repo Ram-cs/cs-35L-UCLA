@@ -1,0 +1,2 @@
+#!/bin/sh 
+grep "<td>.\{1,\}</td>" | tr "A-Z\`" "a-z\'" | sed -n 'g;n;p'| sed "s/<[^>]*>//g" | sed 's/, /\n/g'| sed 's/ /\n/g' | grep "[pk\'mnwlhaeiou]\{1,\}$" | sort -u

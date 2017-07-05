@@ -1,0 +1,137 @@
+Name: Ram Yadav
+Professor: Eggert
+TA:Mushi Zhou
+
+lab4.txt is the description of the lab that  i have done and 
+noticed while ran the command as i did the work
+
+First i downloaded the coreutils old version that had bug
+wget http://web.cs.ucla.edu/classes/winter17/cs35L/assign/
+coreutils-with-bug.tar.gz
+
+
+Once download file saved as coreutils-with-bug.tar.gz
+
+unzip source file
+tar -zxvf coreutils-with-bug.tar.gz
+
+After unzip, went to the directory  
+cd coreutils-with-bug/
+
+Build configure the file
+./configure
+
+and execute the file 
+make
+
+But got an error
+In file included from utimecmp.c:41:0:
+utimens.h:2:5: error: conflicting types for 'futimens'
+ int futimens (int, char const *, struct timespec const [2]);
+     ^~~~~~~~
+In file included from utimecmp.h:25:0,
+                 from utimecmp.c:25:
+/usr/include/sys/stat.h:373:12: note: previous declaration of 
+'futimens' was here extern int futimens (int __fd, const 
+struct timespec __times[2]) __THROW;
+            ^~~~~~~~
+make[3]: *** [Makefile:659: utimecmp.o] Error 1
+make[3]: Leaving directory '/w/home.14/cs/ugrad/yadav/coreutils-
+with-bug/lib'
+make[2]: *** [Makefile:414: all] Error 2
+make[2]: Leaving directory '/w/home.14/cs/ugrad/yadav/coreutils-
+with-bug/lib'
+make[1]: *** [Makefile:419: all-recursive] Error 1
+make[1]: Leaving directory '/w/home.14/cs/ugrad/yadav/coreutils-
+with-bug'
+make: *** [Makefile:357: all] Error 2
+[yadav@lnxsrv07 ~/coreutils-with-bug]$
+
+
+Once fond the error, I went and downloaded the patch
+wget http://web.cs.ucla.edu/classes/winter17/cs35L/assign/
+coreutils.diff
+
+Patch download as 
+coreutils.diff
+
+applied the patch to see the error
+patch -p0 < coreutils.diff
+
+patching file lib/utimens.c
+patching file lib/utimens.h
+patching file src/copy.c
+patching file src/tee.c
+patching file src/touch.c
+
+Once patched, 
+
+make
+
+This time no error found, because it seems that patch fixed the
+bugs of coreutils
+
+so created three files using below command
+$ tmp=$(mktemp -d)
+$ cd $tmp
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+$ touch now
+$ sleep 1
+$ touch now1
+
+I checked to print out the date created: 
+$ TZ=UTC0 ls -lt --full-time wwi-armistice now now1
+
+-rw-r--r-- 1 yadav csugrad 0 2017-02-10 06:45:59.313970740 +0000 now1
+-rw-r--r-- 1 yadav csugrad 0 2017-02-10 06:45:46.022617072 +0000 now
+-rw-r--r-- 1 yadav csugrad 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+
+I found the order of file is not accurate because wwi-armistice would be on the first.
+
+I guessed that it may be because of the problem in src code
+
+it went to source code cd /src/ls
+
+ran the GDB
+(gdb) info functions
+
+in GDB used,
+: break <function_name> - set a break point
+: s - step into function
+:bt - shows stack
+: si
+: f - Gives name of current function
+: finish - runs everything till exit
+: c - continue
+: q- quit
+
+I set a break point at function timespec_cmp
+int diff = a.tv_sec - b.tv_sec;
+    return diff ? diff : a.tv_nsec - b.tv_nsec;
+
+it may be because of integer overflow because a.tv_sec - b.tv_sec gives
+very large negative number. It can be fixed by return negative(A<B), zero(A ==B), and positive(A>B)
+
+then created diff of this timespec.h 
+
+diff -u coreutils-with-bug/lib/timespec.h coreutils-with-bug-new/lib/timespec.h
+> lab4.diff
+
+Then added changelog entry and appended to diff files
+
+ran s -lt, gave the correct result
+
+The Local file in system on SEASnet is a 64 bit file system while tmp
+folder is 32bit file system. Time sorted in a 64 bit system is a combination of +  and - sign and time elapsed since 1970. The reason it shows future time is because
+when convert time from 64 to 32 bit, - sign lost. 
+
+
+
+
+
+
+
+
+
+
+

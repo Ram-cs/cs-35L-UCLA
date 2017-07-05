@@ -1,0 +1,51 @@
+File: hw3.txt- This file is a question’s answer from Q1-Q4
+
+1.
+the line case_long_iso_time_style: has been removed from the code
+Its a goto statement in a switch statement and repeated twice. 
+This line was not appropriate to remove because because goto line
+was removed and the label never referenced.
+
+2.
+It mainly causes two problems:
+- as new patched version of coreutils-7.6 assumed the readers in 
+international level can read the date in English, but in reality 
+it may not be a case. So due to timestamp format it may be a problem 
+for international clients/ companies to get confusion
+- 2nd ly it only works for patched (a specific to a timestamp format), so 
+if there is a program written in non-patched version, it would create a
+problem running program in this platform.
+
+3. In the linux, a unix like system, file /dev/null is an empty file.
+It is kind of trash in a GUI, but like GUI, can’t recover the file.
+when trying to run this file
+python readline.py /dev/null
+Traceback (most recent call last):
+  File "readline.py", line 71, in <module>
+    main()
+  File "readline.py", line 65, in main
+    sys.stdout.write(generator.chooseline())
+  File "readline.py", line 35, in chooseline
+    return random.choice(self.lines)
+  File "/usr/local/cs/Python-2.7.12/lib/python2.7/random.py", 
+line 275, in choice
+return seq[int(self.random() * len(seq))]  # raises 
+IndexError if seq is empty
+IndexError: list index out of range
+Its says list index out of range at the end.It is because python
+read the script from the file and index the elements but there is no 
+elements found. Or python tries to access elements of the file using
+arguments in the brackets and there is not elements at that index.
+
+
+4.
+The output is: 
+File "./randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+It si because of the tuple unpacking. Python 2 has automatic 
+tuple unpacking while python3 has tuple parameter unpacking 
+that that was removed causing the syntax error different.
+to fix this, one can reference multiple arguments with the 
+single passing parameter.

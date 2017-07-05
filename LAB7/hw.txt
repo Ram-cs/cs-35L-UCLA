@@ -1,0 +1,35 @@
+LAB - 7 SSH setup and use in applications
+
+Ram Yadav
+604841556
+
+1. Since everything is encrypted, it would be secure if they
+observed all bytes going across the network. Because the 
+message will be encrypted through authentication process
+using the receiver’s public key and can only be decrypted by
+the receivers private key and that are not available over on
+the network
+
+Since passwords/passphrase are recorded by them, it would be not 
+secure when they tapped into our keyboards. Because they would get
+authentication as a passphrase through the private key and they
+would be able to decrypt all the data during the session as well as
+they would be able to generate session key from the passphrase 
+they got from the keyboard taps.
+
+When they are booting with a USB, they can now use the private
+key to decrypt any messages so, password/passphrase wouldn’t be 
+secure. They can make themselves as a root of the environment and 
+thus can have access to all the public and private keys, which they
+can use for decrypt and encrypt.
+
+2.
+
+gpg —verigy: It doesn’t verify the original owner/sender of the file
+but it does compare the cleartext signature once data is decrypted using
+public key. So, public key doesn’t indicate who the file is belongs too,
+but verifies the documents
+
+to Fix this problem, we have to keep track of the public keys, and
+we can hire organization that does keep track of the public keys. As
+an example it could be a third party.

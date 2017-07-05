@@ -1,0 +1,134 @@
+
+Performance Comparison
+
+ASCII character has been randomly choose
+
+Time unit: s
+
+=================================================================
+|ver		|	real	|	user	|	sys	|
+|sfrob  1000	|	0.004	|	0.002	|	0.000	|
+|sfrobu 1000	|	0.055	|	0.008	|	0.032	|
+|sfrob  10000	|	0.045	|	0.011	|	0.003	|
+|sfrobu 10000	|	0.500	|	0.015	|	0.432	|
+|sfrob  100000	|	0.315	|	0.232	|	0.005	|
+|sfrobu 100000	|	4.934	|	0.632	|	4.234	|
+|sfrob  1000000	|	3.234	|	2.532	|	0.023	|
+|sfrobu 1000000	|	45.093	|	2.432	|	42.532	|
+=================================================================
+
+
+so by linear regression buffer version is always faster
+
+
+performace by shell version
+
+Number of lines: 10
+time ./sfrob < file.txt
+real	0m0.002s
+user	0m0.001s
+sys	0m0.000s
+
+time ./sfrobu < file.txt
+real	0m0.002s
+user	0m0.000s
+sys	0m0.001s
+
+time ./sfrobs < file.txt
+real	0m0.014s
+user	0m0.002s
+sys	0m0.008s
+
+Number of Lines: 100
+time ./sfrob < file.txt
+real	0m0.003s
+user	0m0.005s
+sys	0m0.003s
+
+time ./sfrobu < file.txt
+real	0m0.004s
+user	0m0.000s
+sys	0m0.008s
+
+time ./sfrobs < file.txt
+real	0m0.004s
+user	0m0.006s
+sys	0m0.002s
+
+Number of Lines: 1000
+time ./sfrob < file.txt
+real	0m0.008s
+user	0m0.004s
+sys	0m0.003s
+
+time ./sfrobu < file.txt
+real	0m0.009s
+user	0m0.003s
+sys	0m0.008s
+
+time ./sfrobs < file.txt
+real	0m0.022s
+user	0m0.005s
+sys	0m0.009s
+
+Number of Lines: 1000
+time ./sfrob < file.txt
+real	0m0.053s
+user	0m0.023s
+sys	0m0.013s
+
+time ./sfrobu < file.txt
+real	0m0.063s
+user	0m0.034s
+sys	0m0.035s
+
+time ./sfrobs < file.txt
+real	0m0.054s
+user	0m0.037s
+sys	0m0.014s
+
+Number of Lines: 10000
+time ./sfrob < file.txt
+real	0m1.016s
+user	0m0.634s
+sys	0m0.232s
+
+time ./sfrobu < file.txt
+real	0m0.990s
+user	0m0.342s
+sys	0m0.343s
+
+time ./sfrobs < file.txt
+real	0m1.034s
+user	0m0.342s
+sys	0m0.084s
+
+Number of Lines: 100000
+time ./sfrob < file.txt
+real	0m11.983s
+user	0m4.265s
+sys	0m1.217s
+
+time ./sfrobu < file.txt
+real	0m11.342s
+user	0m2.342s
+sys	0m3.321s
+
+time ./sfrobs < file.txt
+real	0m12.532s
+user	0m4.562s
+sys	0m0.868s
+
+This is run time comparison 
+
+|lines	|	sfrob	|	sfrobu	|	comparison	|
+|1000	|	1	|	10.7	|	8435		|
+|10000	|	1	|	13.28	|	110532		|
+|100000	|	1	|	14.8	|	1436543		|
+|1000000|	1	|	11.76	|	19674342	|
+
+
+Its all give the information about timing, all cases between sfrob
+and sfrobu. sfrob has lower system call because it spends less time
+in karnel mode. but sfrou spends less time in user mode
+shell script has slower execution time than both sfrob and sfrobu

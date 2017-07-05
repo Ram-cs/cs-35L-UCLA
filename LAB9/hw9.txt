@@ -1,0 +1,84 @@
+Ram Yadav
+UID:- 604841556
+
+Made the hw9.txt
+Check out the new version 3.0 of Diffutils from my repository
+
+git checkout -b quote v3.0
+
+Switched to a new branch 'quote'
+
+patch under this directory: /Users/RamYadav/Desktop/LAB9/diffutils
+   patch -p1 < /Users/RamYadav/Desktop/LAB9/diffutils/quote-3.0-patch.txt
+
+scp from the server to the file and then send it to my partner, and
+i downloaded my partners patch.
+
+I then did git log  to see if partners patch applied
+and there are 6 patching files:
+    patching file src/cmp.c
+    patching file src/diff.c
+    patching file src/diff3.c
+    patching file src/dir.c
+    patching file src/sdiff.c
+    patching file src/util.c
+Author: chanchae chuchai <chai@lnxsrv07.seas.ucla.edu>
+Date:   Fri Mar 17 17:28:44 2017 -0800
+
+    2017-March-17 chanchae chuchai <chai@lnxsrv07.seas.ucla.edu>
+
+        * src/util.c: Changed grave accents to apostrophes
+
+        * src/sdiff.c: Changed grave accents to apostrophes
+
+        * src/dir.c: Changed grave accents to apostrophes
+
+        * src/diff3.c: Changed grave accents to apostrophes
+
+        * src/diff.c: Changed grave accents to apostrophes
+
+        * src/cmp.c: Changed grave accents to apostrophes
+
+
+then ran the general command
+
+used emacs src/cmp.c
+   C-x 4 a and 
+   C-x C-f
+and I write "change all "`" to "'" "
+
+commit changes to the new branch
+   git add .
+   git commit -F ./src/ChangeLog
+
+git format-patch -1 --stdout > formatted-patched.txt
+
+My partner is Chungchhay Kuoch (UID:004843308)
+   git checkout -b partner v3.0
+   git am < /Users/RamYadav/Desktop/LAB9/diffutils/formatted-patch.txt
+
+   Then I apply following steps:
+   ./bootstrap
+   cd lib
+  wget http://web.cs.ucla.edu/classes/winter17/cs35L/assign/diffutils-gets.diff
+  patch -p1 < diffutils-gets.diff
+  cd ..
+  ./configure
+  make
+  make check
+  diff . -
+  diff --help
+
+make distdir
+It create a new directory called "diffutils-3.0.1-7840" under diffutils
+emacs diffutils*/ChangeLog
+The content in this file is the same as my ChangeLog.
+
+First I download and install XQuartz from website.
+ssh -X classxxx@lnxsrv07.seas.ucla.edu
+export PATH=/usr/local/cs/bin:$PATH
+git clone git://git.savannah.gnu.org/emacs.git
+cd emacs
+gitk
+
+at the end i took the snapshot.

@@ -1,0 +1,14 @@
+Top Left window:
+Showing the branches and the description(or say name) of each commit of merge.
+
+Top Middle window: 
+Showing the author
+
+Top Right window:
+Showing opeartion's date and time
+
+Bottom Left window:
+Content of current selected commit or merge
+
+Bottom right window:
+Comment of current selected commit or merge

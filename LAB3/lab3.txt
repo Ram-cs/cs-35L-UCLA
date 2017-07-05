@@ -1,0 +1,57 @@
+lab3.txt: A record of command and its use and an explanation
+on why commands were used. for python i have 
+used online resources.
+
+
+I downloaded the Coreutils 7.6 package. I downloaded 
+the package and untar it from the dictionary i created
+
+1.
+Then, did wget to download coreutils-7.6 by using 
+wet ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+tar -xzvf coreutils-7.6.tar.gz
+
+2.
+after downloaded, I installed the file as showed in prefix.
+the following command helped to coreutilsInstall directory 
+in the home directory.
+To install the file:
+cd coreutils-7.6/
+Made a new directory: by using the command mkdir newDir
+Run:  ./configure --prefix="$PWD/newDir”
+after downloaded, needed to install package in coureutilsInstall
+dictionary and did that with make 
+Run: make 
+Run: make install 
+
+3.
+i just went and export LC_ALL='en_US.UTF-8'
+Bug can be seen by  ./ls -l bin/bash
+The correct version is:  ls -l
+Difference in date format can be seen.
+
+4.
+There are issues after running ls command, so started 
+patch the issue up. I did by cd’ing back into coreutils
+-7.6 directory and creating a file called patch_file 
+with the copied and pasted text from Brady’s patch. 
+Once done, run the following command within the 
+current directory: patch -p1 < patch_file
+
+and then, finally ran the make command. Now we saw 
+that the ls command in the coreutils-7.6/src/ directory
+ shows the behaviour of displaying the
+timestamp (Month-Date-Year/Hour) instead of (Year-Month-Date.)
+
+after applying the patch, it seems like fewer file ran with 
+make compared to original command. 
+
+5. Ran again, the less file executed this time because of 
+ls.c was modified. 
+6. Then touched new file and then ran ./ls - l bin/bash
+This time it gives correct answer.
+
+
+
+
+

@@ -1,0 +1,213 @@
+Name: Ram Yadav
+
+Email: ramusa2011.ucla.edu
+TA: ZHOU, MUSHI
+Prof: Eggert
+
+
+b2.log: This file records the key commands
+ and its output to accomplish this task
+
+
+Started this lab by checking locale
+ command it is LC_ALL=‘C’, it was not this.
+ so used export LC_ALL=‘C’.
+
+used command sort /usr/share/dict/words
+ > words to sort the dictionary on 
+the linux server. > means i redirected
+ my sorted dictionary into the file 
+called words
+
+Then got content of the assignment
+ page by command wget.
+used wget http://web.cs.ucla.edu/classes
+/winter17/cs35L/assign/assign2.html
+
+Then run the command tr -c 'A-Za-z' '[\n*]'
+ < assign2.html, this command 
+outputs bunch of each words (Capital
+ and Small letter) with many lines. 
+The reason is tr command with -c takes
+ compliments of the first set 
+that are upper and lower case and
+ replace with the new lines 
+character. But no letter character 
+still exits in the line 
+as our command doesn’t do anything 
+with them.
+
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt, it 
+outputs each word of the file (upper 
+case and lower case) into the newline. 
+-s option means “squeezes” is the only
+ different than previous command. So
+ it squeezes everything after the
+ output of the command tr -c 'A-Za-z' 
+'[\n*]' so, all the newlines characters 
+that are corresponded to the number of 
+non letter character in the HTML from 
+before are deleted. 
+
+
+tr -cs 'A-Za-z' '[\n*]' < assign2.txt | sort, 
+The reason for the sort, i need an output
+ before sort operate on it. So i gets 
+input from the command used in the previous
+ and sorted them in an order. Used piped (|)
+ to get the input from the previous command 
+tr -cs 'A-Za-z' ‘[\n*]’. Doing this command,
+ can get letters and words on 
+newlines in sorted order from the HTML document
+
+
+So just like in previous, put the standard input
+ in the correct location. and run tr -cs 'A-Za-z'
+ '[\n*]' < assign2.txt | sort -u, Here, -u delete
+ any duplicate characters. This command output
+ same result as previous command but it deletes
+ the duplicate words. 
+
+tr -cs 'A-Za-z' '[\n*]' <assign2.txt | sort -u |
+ comm - words, it compares the results of the
+ standard output with the result of words line
+ by line, and put the result in three different 
+columns. The 
+first columns (prints list of everything unique
+ to the standard input- in out case it is sorted 
+non duplicated words from HTML file on a new 
+line) second column(it lists everything unique
+ to the second file) third column(it lists 
+everything similar in both). As having more
+ contents on the words dictionary,
+ outputs in the second columns is more intensive
+
+The last command is tr -cs 'A-Za-z' '[\n*]'
+ | sort -u | comm -23 - words, it is similar 
+to the previous command but little different 
+that it is -23 option. 2(2nd column) 3 (3rd 
+column), means that suppressing the second
+ and third colums from the “comm” command.
+ When did it outputs the unique standard
+ input with respect to the sorted words 
+from the standard input. 
+
+
+After the command session done, created the 
+file "hwords" that downloaded “English to
+ Hawaiian”  by the command wget 
+http://mauimapp.com/moolelo/hwnwdseng.htm
+
+Once downloaded, used the command like tr
+ (translation and deletion), sed (to search
+ and replace), grep (to search and select that
+ are specified and output in the console) 
+to do the works as described in the
+ specification.
+
+Wrote a bash command in in bash cell named
+ buildwords. All bash commands has pipped
+ and used output of the privious to the 
+input of the consacutive one
+
+
+#!/bin/bash
+e
+dir=$1
+#HTML tag '<tr>' or '<td>' is extracted
+grep "<tr>.\{1,\}</td>" |
+
+#"\n" added new lines in the blank space
+tr '[:blank:]' '\n' |
+
+#the repeated blank lines has been removed
+tr -s '\n' |
+
+#all English words removed
+sed '/<tr>/,/\/td>/d' |
+
+#HTML tages removed that resulted lots 
+of blank space
+sed 's:<[^>]*>::g' |
+
+#upper letter has been replaced with 
+lower letter
+tr '[:upper:]' '[:lower:]' |
+
+# grave accent "`" from ASCII replaced with 
+ ASCII apostrophe "'"
+tr '`' "'" |
+
+# \r\n carriage return deleted
+sed 's:\r:\n:g' |
+
+#delete all commas
+tr -d , |
+
+#replace a space with a new line globally
+sed 's/ /\n/g'
+
+#non-hawainn characters rejected
+sed '/[^pk1mnwlhaeiou]/d' |
+
+#sort the file
+sort -u
+
+buildwords can run by two way(changing permission)
+or bash buildwords
+chmod u+x buildwords
+Run: cat hwnwdseng.html | ./buildwords > hwords
+
+7. I then downloaded the webpage using wget
+http://web.cs.ucla.edu/classes/winter17/
+cs35L/assign/assign2.html
+
+cat assign2.html | tr “PKMNWLHAEIOU” “pkmnwlhaeiou” 
+| tr -cs “pk\’mnwlhaeiou” ‘[\n*]’ | sort -u |
+ comm -23 - hwords | we -l
+198
+It means 198 is misspelled in the english 
+dictionary. command above means, read 
+assign2.html,make all uppercase to lowercase,
+ output each word in a line starting with
+ pk\'mnwlhaeiou and sorted those words
+ removing duplicatees and then campare
+assign2.html with hwords dictionary to see the
+numer of misspelled words in English.
+
+
+cat assign2.html |tr -cs ‘A-Za-z’ ‘[\n*]’
+ | sort -u |comm -23 -words |we -l
+81
+got 81 misspelled in Hawaiian words. The 
+command above means read assign2.html, output
+each words in a new line starting from
+A-Za-z and sorted those words removing duplicates
+and then compare assign2.html with words to see the 
+number of misspelled words in Hawaiian
+
+cat assign2.html |tr -cs ‘A-Za-z’ ‘[\n*]’ | tr
+ ‘[:upper:]’ ‘[:lower:]’ | sort -u | comm -23
+ -words | comm -12 -hwords
+halau
+lau
+wiki
+Not misspelled Hawaiian but English words
+ misspelled
+
+cat assign2.html | tr -cs ‘A-Za-z’ ‘[\n*]’ |
+ tr ‘[:upper:]’ ‘[:lower:]’ | sort -u | comm
+ -23 -hwords | comm -12 - words | wc -l
+above lines says get the letter from A-Za-z
+ convert upper case to lower case and sort
+stdout unique to file one and similar to 
+file one and file two
+
+For the howework part:
+wrote a program in a bash shell, that finds
+duplicates of the file and does other 
+specified things like sorting file with 
+starting dot and then regular file. 
+Also the file name starting with the 
+special charater like *, _ and 'space'
+

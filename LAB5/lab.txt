@@ -1,0 +1,144 @@
+
+Ram YadavAssignment: 5Prof. Paul EggertTA Mushi Zhou
+Created two program called tr2b and tr2u. tr2b uses getchar 
+and putchar while tr2b uses I/O
+
+As mentioned in the homework, program compares the length 
+to make sure it has same length, and also check for duplication
+
+created some file with no contents on it but lines only 
+using as spec, i created a file more than 5000000, 
+that is 7000000 bytes dd if=/dev/urandom of=file.txt 
+bs=3500000 count=2 to make sure i created the file
+2+0 records in
+2+0 records out
+7000000 bytes (7.0 MB, 6.7 MiB) copied, 0.717576 s, 
+9.8 MB/s
+
+used ls -l to get file detailed
+-rw-r--r-- 1 yadav csugrad 7000000 Feb 16 09:12 file.txt
+
+I used command to compile the file that i wrote
+gcc -o tr2u tr2u.c
+gcc -std=c99 -o tr2b tr2b.c
+
+To compare the system calls, I used strace
+
+Copied one file to another
+
+I used:
+strace -c ./tr2b 'a' 'x' < file.txt > output_tr2b
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- --------
+ 33.88    0.000062          31         2           read
+ 20.22    0.000037           4         9           mmap
+ 12.02    0.000022           6         4           mprotect
+  7.10    0.000013          13         1           write
+  5.46    0.000010           5         2           open
+  5.46    0.000010           3         4           fstat
+  4.92    0.000009           9         1           munmap
+  3.28    0.000006           6         1         1 access
+  2.73    0.000005           5         1           execve
+  2.19    0.000004           2         2           close
+  1.64    0.000003           3         1           brk
+  1.09    0.000002           2         1           arch_prctl
+------ ----------- ----------- --------- --------- ---------
+100.00    0.000183                    29         1 total
+
+strace -c ./tr2u 'a' 'x' < file.txt > output_tr2u
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- -------
+ 98.97    6.230741           1   7000002           read
+  1.03    0.064567           1     54709           write
+  0.00    0.000046           7         7           mmap
+  0.00    0.000032           8         4           mprotect
+  0.00    0.000017           9         2           open
+  0.00    0.000011          11         1           munmap
+  0.00    0.000008           4         2           close
+  0.00    0.000008           4         2           fstat
+  0.00    0.000007           7         1         1 access
+  0.00    0.000007           7         1           execve
+  0.00    0.000004           4         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ---------
+100.00    6.295452               7054733         1 total
+
+So it is found that buffered version(tr2b) has fewer calls
+
+strace -c ./tr2b 'a' 'x' < file.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- --------
+ 44.12    0.000060          30         2           read
+ 15.44    0.000021           2         9           mmap
+ 11.03    0.000015           4         4           mprotect
+  6.62    0.000009           5         2           open
+  5.88    0.000008           8         1           munmap
+  5.15    0.000007           2         4           fstat
+  3.68    0.000005           5         1           write
+  3.68    0.000005           5         1         1 access
+  1.47    0.000002           1         2           close
+  1.47    0.000002           2         1           execve
+  0.74    0.000001           1         1           brk
+  0.74    0.000001           1         1           arch_prctl
+------ ----------- ----------- --------- --------- -----------
+100.00    0.000136                    29         1 total
+
+strace -c ./tr2u 'a' 'x' < file.tx
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ---------
+ 98.96    6.612676           1   7000002           read
+  1.04    0.069598           1     54709           write
+  0.00    0.000047           7         7           mmap
+  0.00    0.000038          10         4           mprotect
+  0.00    0.000017           9         2           open
+  0.00    0.000012          12         1           munmap
+  0.00    0.000009           5         2           fstat
+  0.00    0.000009           9         1         1 access
+  0.00    0.000008           4         2           close
+  0.00    0.000007           7         1           execve
+  0.00    0.000006           6         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------
+100.00    6.682431               7054733         1 total
+
+As seen, tr2u significantly has more system call than tr2b 
+because read and write makes two system call per byte 
+whereas with getchar and putchar, it used information 
+stored in buffer so that doesn’t have to make
+more system calls.
+ 
+for the last portion, tested efficiency using the time 
+command under same condition (copy from one to another 
+and then copy to terminal)
+tr2b:
+time ./tr2b abc def < file.txt > bufCop.txt
+real	0m0.009s
+user	0m0.000s
+sys	0m0.001s
+
+time ./tr2u abc def < file.txt > unbufCop.txt
+real	0m2.669s
+user	0m0.313s
+sys	0m2.353s
+
+tr2u:
+time ./tr2b abc def < file.txt
+real	0m0.002s
+user	0m0.000s
+sys	0m0.001s
+
+time ./tr2u abc def < file.txt
+real	0m2.979s
+user	0m0.332s
+sys	0m2.644s
+
+
+Through the eight different test, it has been concluded 
+that getchar and putchar are significantly faster 
+than read and write because of the 
+use of buffer to perform the system calls per bytes. 
+Also  stdout is more longer as it needs
+more system calls
+

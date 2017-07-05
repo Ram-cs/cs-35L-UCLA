@@ -1,0 +1,78 @@
+LAB 7 - SSH setup and use in applications
+
+Ram Yadav
+604841556
+
+
+LABORATORY
+Steps taken:
+1. Had to setup environment:
+sudo apt-get install openssh-server
+sudo apt-get install openssh-client
+ - installs the openssh-server and openssh-client
+
+1. Setup for Server
+ssh-keygen
+ - used to make a pait of keys
+file1
+ - it asks us to make file to save the key
+ - we named it file1
+(password)
+ - it then asked us to make a passcode for this key
+ - the passcode it used to decrypt the file holding the key from the local disk
+ - it will make two files
+   - the files are file1 and file1.pub
+   - the file1.pub is the public key
+
+sudo useradd -d /home/ -m <username>
+sudo passwd <username>
+ - creates an account for the client on the server
+ - it will ask to enter password twice
+
+cd /home/
+ - go to home directory
+
+sudo mkdir .ssh
+ - creates .ssh directory for the new user
+
+sudo chown -R <username> .ssh
+sudo chmod 700 .ssh
+ - changes ownership and permission on .ssh directory
+
+hostname -I
+ - to find IP Address of server
+ - will be used later for client
+
+ping <IP-Address>
+ - to check if address is correct
+
+3. Setup for Client
+ssh-keygen
+ - generate public and private keys
+
+ssh-copy-id -i <username>@<IP-Address>
+ - copies our public key to the server for the key-based authentication
+ - use ip address found from host
+ - use username made on the host
+
+ssh-add
+ - adds private key to authentication agent or ssh-agent
+ - will ask for the password again
+
+
+ssh <username>@<IP-Address>
+ssh -X <username>@<ip-address>
+ - SSH into server
+
+The client will now be connected to the server.
+The client will now be able to run commands on
+the remote host from the client computer.
+Can look through directories of the host from the client.
+
+Can now do the command on client:
+xterm
+ - will bring out shell window on the host
+ - typed command xterm, displayed on displays the host
+
+
+

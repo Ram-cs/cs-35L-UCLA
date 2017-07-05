@@ -1,0 +1,68 @@
+dir=$1 #Get an argument
+
+#sort the file in the dictionary
+RESULT=`ls -a $dir | sort`
+
+#Set delimeter as new line and files with spaces are recognized
+IFS=$'\n'
+
+#Array for the dot file
+declare -a ARRDOTS
+#Array to hold other regular file
+declare -a ARROTHER
+
+#File counter for  ARRDOTS
+let countDot=0
+#File counter for  ARROTHER
+let countOther=0
+
+#Loop through the result
+for FILE in $RESULT
+do
+   if [ ! -r "$dir/$FILE" ] #check if file cannot be read
+   then
+        echo "You don't have reading permission $dir/#FILE"
+   fi
+
+   #if the file is symbolic and readable
+   if [[ ! -L "$dir/$FILE" && -r "$dir/$FILE" ]]
+   then
+        if [ -f "$dir/$FILE" ] #if the file is regular
+        then
+             if [ "${FILE:0:1}" == "." ] #if the file being with "."
+             then
+                  ARRDOTS[$countDot]="$dir/$FILE"
+                  let countDOT=countDot+1
+             else
+                  ARROTHER[$countOther]="$dir/$FILE"
+                  let countOther=countOther+1
+             fi
+        fi
+    fi
+done
+
+#Put 2 array in one arry, dot file start first
+# then lexicographically
+ARRDOTS=("${ARRDOTS[@]}" "${ARROTHER[@]}")
+let countOther=${#ARRDOTS[@]} #let countOther be the size of total files
+exec 2>/dev/null
+#To compare if the array has duplicate files I run nested loop
+for (( i=0; i<$countOther; i++ ))
+do
+   for (( j=$i+1; j<$countOther; j++ ))
+   do
+      #Check if the files are the same
+      if [[ -s "${ARRDOTS[$i]}" && -s "${ARRDOTS[$j]}" || ! -s "${ARRDOTS[$i]}"
+             && ! -s "${ARRDOTS[$j]}" ]]
+      then
+           diff=$(cmp -s --"${ARRDOTS[$i]}" "${ARRDOTS[$j]}")
+                      if [ ! $diff ] #if the files are the same
+                      then
+                        #create a hard link to get a higher precedence file
+                        ln -f --"${ARRDOTS[$i]}" "${ARRDOTS[$j]}"
+                      fi
+      fi
+   done
+done
+
+
