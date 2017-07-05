@@ -1,0 +1,68 @@
+Ram Yadav
+Prof: Eggert
+
+before start work, checked the sort version
+by typing the command
+sort --version
+which shows sort 
+(GNU coreutils) 8.26
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Haertel and Paul Eggert.
+
+Add to the path
+$ export PATH=/usr/local/cs/bin:$PATH
+
+generated a file containing 10,000,000 random single-precision floating 
+point numbers, in textual form, one per line with no white space
+used the command,
+od -An -f -N 40000000 < /dev/urandom | tr -s ' ' '\n' | sed '/^$/d' >  random.txt
+
+where, od -An means output format, -f floating point number, -N number of bites that
+will be dumbed. The number is 40000000 because each floating points has 8 bytes
+tr -s ' ' '\n' | sed '/^$/d' means, replace all the repeated sequence of spaces with a single newline, and $(end of line) ^(beginning of the line) and ^$(empty line), d(delete 
+matching line)
+
+
+-g is general number sorting, time -p time in portable format
+/dev/null is the place like trash in the general coputers
+
+time -p sort -g --parallel=1 random.txt > /dev/null
+real 112.13
+user 111.89
+sys 0.21
+
+time -p sort -g --parallel=2 random.txt > /dev/null
+real 58.24
+user 111.04
+sys 0.24
+
+time -p sort -g --parallel=4 random.txt > /dev/null
+real 32.90
+user 111.11
+sys 0.36
+
+time -p sort -g --parallel=8 random.txt > /dev/null
+real 20.62
+user 112.41
+sys 0.48
+
+It is found that Sys is increasing as parallel number increase and real time
+decrease as parallel increase. Whereas user remains constant. It is because all of the threads work simultaneously.
+It means as threads increases, the data process simultaneously and result faster in
+processing the data. The thread i created is proportional to the amount of reduction. 
+
+
+
+
+
+
+
+
+
+
+
+

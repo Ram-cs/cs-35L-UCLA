@@ -1,0 +1,28 @@
+rm -f *.o *.ppm *.tmp srt srt.tgz
+3 warnings generated.
+gcc -std=gnu99 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o raymath.o raymath.c
+gcc -std=gnu99 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o shaders.o shaders.c
+gcc -std=gnu99 -g -O2 -Wall -Wextra -Wno-unused-parameter -o srt main.o raymath.o shaders.o -lm -lpthread
+time ./srt 1-test.ppm >1-test.ppm.tmp && mv 1-test.ppm.tmp 1-test.ppm
+
+real	0m28.434s
+user	0m28.320s
+sys	0m0.046s
+time ./srt 2-test.ppm >2-test.ppm.tmp && mv 2-test.ppm.tmp 2-test.ppm
+
+real	0m14.086s
+user	0m27.912s
+sys	0m0.025s
+time ./srt 4-test.ppm >4-test.ppm.tmp && mv 4-test.ppm.tmp 4-test.ppm
+
+real	0m13.366s
+user	0m49.025s
+sys	0m0.123s
+time ./srt 8-test.ppm >8-test.ppm.tmp && mv 8-test.ppm.tmp 8-test.ppm
+
+real	0m16.968s
+user	0m49.473s
+sys	0m0.401s
+for file in 1-test.ppm 2-test.ppm 4-test.ppm 8-test.ppm; do \
+	  diff -u 1-test.ppm $file || exit; \
+	done
